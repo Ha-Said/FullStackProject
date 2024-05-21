@@ -6,11 +6,11 @@
     <meta charset="UTF-8">
     <title>Eternal Love</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/Style/styles.css')}}">
 </head>
 <header>
     <div id="brand">
-        <a href="facebook.com">Amour eternelle</a>
+        <a href="/">Amour eternelle</a>
     </div>
 
     <script src="/script.js"></script>
@@ -39,18 +39,18 @@
                 <input type="submit" value="Create a new room">
             </form>
         </div>
-        
+
 
         <div id="joinDiv" class="container">
             <form action="" method="get">
-            <div class="divTitle">Join An Already Created Room</div>
-            <div>Use an ID provided by your partner to join</div>
-            <input type="text" id="oldID">
-            <input type="submit" value="Join" >
-            
-        </form>
+                <div class="divTitle">Join An Already Created Room</div>
+                <div>Use an ID provided by your partner to join</div>
+                <input type="text" id="oldID">
+                <input type="submit" value="Join">
+
+            </form>
         </div>
- 
+
     </div>
 
 </body>

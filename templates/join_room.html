@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="/Images/hearts.png" type="image/x-icon" />
+    <link rel="icon" href="{{ url_for('static', filename='/Images/hearts.png')}}" type="image/x-icon" />
     <meta charset="UTF-8">
     <title>Eternal Love</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/style/styles.css')}}">
 </head>
 <header>
     <div id="brand">
-        <a href="facebook.com/" > Eternal Love</a>
+        <a href="/" > Eternal Love</a>
     </div>
     <div id="ID">
         <a>{{room_id}}</a>
@@ -22,7 +22,7 @@
                 <div class="divTitle">Create a Room</div>
                 <div id="question"> {{question}} </div>
                 <input type="text" name="answer" placeholder="Please Write Your Answer Here">
-                <input type="submit" value="Submit Your Answer">    
+                <input type="submit" value="Submit Your Answer ">    
             </form>
         </div>
     </div>

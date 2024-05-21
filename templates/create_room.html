@@ -1,39 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="icon" href="/Images/hearts.png" type="image/x-icon" />
-    <meta charset="UTF-8">
-    <title>Eternal Love</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <head>
+        <link rel="icon" href="/Images/hearts.png" type="image/x-icon" />
+        <meta charset="UTF-8">
+        <title>Eternal Love</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/Style/styles.css')}}">
+    </head>
 <header>
     <div id="brand">
-        <a href="facebook.com/">Eternal Love</a>
+        <a href="/">Eternal Love</a>
     </div>
     <div id="ID">
-        <a>{{room_id}}</a>
+        <a>{{ room_id }}</a>
     </div>
 </header>
 <body>
     <div class="div_container">
-        <div id="joinDiv" class="container">
+        
             {% if created_room %}
-                <div class="message">
-                    <div class="divTitle">You've already created a room.</p>
-                    <p>Your room ID is in the top right corner.</p>    
-                    <p>Your question was: {{ question }}</p>
+                <div class="message container successDiv" >
+                    <div class="divTitle">You've created a room.</div>
+                    
+                    <p>Your room ID is in the top right corner.</p>
+                    <p>The question was: {{ question }}</p>
                     <p>Your answer was: {{ answer }}</p>
                 </div>
             {% else %}
-                <form action="/create_room" method="POST">
-                    <div class="divTitle">Create a Room</div>
-                    <div>{{question}}</div>
-                    <input type="text" name="answer" placeholder="Please Write Your Answer Here">
+                
+                <div class="divTitle">Create a Room</div>
+                <div>{{ question }}</div>
+                <form method="POST">
+                    <input type="text" name="answer" placeholder="Please Write Your Answer Here" required>
                     <input type="submit" value="Submit Your Answer">
                 </form>
+            
             {% endif %}
-        </div>
+            {% if success_message %}
+                <div class="message">{{ success_message }}</div>
+            {% endif %}
+        
     </div>
 </body>
 </html>
