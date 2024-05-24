@@ -6,6 +6,7 @@
         <title>Eternal Love</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/Style/styles.css')}}">
+        <script src="{{url_for('static',filename='/script.js')}}"></script>
     </head>
 <header>
     <div id="brand">
@@ -28,17 +29,16 @@
                 </div>
             {% else %}
                 
-                <div class="divTitle">Create a Room</div>
-                <div>{{ question }}</div>
+                
                 <form method="POST">
+                    <div class="divTitle">Create a Room</div>
+                <div>{{ question }}</div>
                     <input type="text" name="answer" placeholder="Please Write Your Answer Here" required>
                     <input type="submit" value="Submit Your Answer">
                 </form>
             
             {% endif %}
-            {% if success_message %}
-                <div class="message">{{ success_message }}</div>
-            {% endif %}
+            
         
     </div>
 </body>

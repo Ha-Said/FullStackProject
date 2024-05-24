@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import random
 import string
 from flask_mysqldb import MySQL
@@ -9,11 +9,13 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'admin'
 app.config['MYSQL_DB'] = 'eternal'
 app.secret_key = "your_secret_key"
-
 mysql = MySQL(app)
 
-# Dictionary to store room IDs for each session
 session_rooms = {}
+
+
+#ROUTING 
+
 
 @app.route("/")
 def home():
@@ -32,16 +34,47 @@ def create_room():
         answer = None  
         session_rooms[session["room_id"]] = {"question": question, "answer": answer}
         created_room = False
-
-    success_message = None
-
     if request.method == "POST":
         answer = request.form.get("answer")
         saveVariables(answer, question[0])
         session_rooms[session["room_id"]]["answer"] = answer
-        success_message = "Thank you! Now wait for your partner's answer."
+    return render_template("create_room.html", created_room=created_room, question=question[1], answer=answer, room_id=session["room_id"])
 
-    return render_template("create_room.html", created_room=created_room, question=question[1], answer=answer, success_message=success_message, room_id=session["room_id"])
+
+
+# ^ WORKS DON'T CHANGE 
+@app.route("/join_room", methods=["GET", "POST"])
+def join_room():
+    if request.method == "GET":
+        room_id = request.args.get("oldID")
+        if room_id and checkRoomID(room_id):
+            question = retrieveQuestionByRoomID(room_id)
+            return render_template("join_room.html", question=question, room_id=room_id, submitted=False)
+        else:
+            flash("Room ID not found. Please try again.")
+            return redirect(url_for("home"))
+
+@app.route("/submit_answer/<room_id>", methods=["POST"])
+def submit_answer(room_id):
+    answer = request.form.get("answer")
+    saveAnswer(room_id, answer)
+    partner_answer = getPartnerAnswer(room_id)
+    question = retrieveQuestionByRoomID(room_id)
+
+    flash("Thank you! Your answer has been submitted.")
+    return render_template("join_room.html", question=question, room_id=room_id, answer=answer, partner_answer=partner_answer, submitted=True)
+
+
+
+# FUNCTIONS 
+
+def getPartnerAnswer(room_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT answer1 FROM rooms WHERE roomid = %s", (room_id,))
+    answers = cursor.fetchone()
+    cursor.close()
+    return answers[0]
+
 
 def saveVariables(answer, question_id):
     cursor = mysql.connection.cursor()
@@ -60,9 +93,26 @@ def retrieveQuestion():
 def generateRoomID():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
-@app.route("/join_room", methods=["GET"])
-def join_room():
-    return render_template("newSession.html")
+def checkRoomID(room_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT COUNT(*) FROM rooms WHERE roomid = %s", (room_id,))
+    count = cursor.fetchone()[0]
+    cursor.close()
+    return count > 0
+
+def retrieveQuestionByRoomID(room_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT q.questiontext FROM rooms r JOIN questions q ON r.questionid = q.questionid WHERE r.roomid = %s", (room_id,))
+    question = cursor.fetchone()[0]
+    cursor.close()
+    return question
+
+def saveAnswer(room_id, answer):
+    cursor = mysql.connection.cursor()
+    cursor.execute("UPDATE rooms SET answer2 = %s WHERE roomid = %s", (answer, room_id))
+    mysql.connection.commit()
+    cursor.close()
+
 
 if __name__ == "__main__":
     app.run(debug=True)

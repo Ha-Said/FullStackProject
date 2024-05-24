@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="{{ url_for('static', filename='/Images/hearts.png')}}" type="image/x-icon" />
+    <link rel="icon" href="{{ url_for('static', filename='Images/hearts.png') }}" type="image/x-icon" />
     <meta charset="UTF-8">
     <title>Eternal Love</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/style/styles.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/styles.css') }}">
 </head>
 <header>
     <div id="brand">
-        <a href="/" > Eternal Love</a>
+        <a href="/">Eternal Love</a>
     </div>
     <div id="ID">
-        <a>{{room_id}}</a>
+        <a>{{ room_id }}</a>
     </div>
 </header>
 <body>
     <div class="div_container">
         <div id="joinDiv" class="container">
-            <form action="/create_room" method="POST">
-                <div class="divTitle">Create a Room</div>
-                <div id="question"> {{question}} </div>
-                <input type="text" name="answer" placeholder="Please Write Your Answer Here">
-                <input type="submit" value="Submit Your Answer ">    
-            </form>
+            {% if not submitted %}
+                <form method="POST" action="{{ url_for('submit_answer', room_id=room_id) }}">
+                    <div class="divTitle">Answer To See and Compare Your Answers</div>
+                    <div id="question">{{ question }}</div>
+                    <input type="text" name="answer" placeholder="Please Write Your Answer Here" required>
+                    <input type="submit" value="Reveal Your Partner's Answer">
+                </form>
+            {% else %}
+
+            <div class="div_container" id="AnswerRevealDiv">
+                <div class="divTitle">The question was: {{ question }}</div>
+                <div id="answerReveal">Your partner's answer was: {{ partner_answer }}</div>
+                <div id="answerReveal">Your answer was: {{ answer }}</div>
+                <div id="answerReveal">Share the result with your partner and discuss what you learned about each other.</div>
+                <div class="divTitle">Relationship Assessment</div>
+                <div>{{ assessment }}</div>
+            </div>
+            {% endif %}
         </div>
     </div>
+
+  
 </body>
 </html>

@@ -42,14 +42,14 @@
 
 
         <div id="joinDiv" class="container">
-            <form action="" method="get">
+            <form action="{{ url_for('join_room') }}" method="get">
                 <div class="divTitle">Join An Already Created Room</div>
-                <div>Use an ID provided by your partner to join</div>
-                <input type="text" id="oldID">
+                <div>Use an ID provided by your partner to Answer and Compare your results</div>
+                <input type="text" id="oldID" name="oldID" required>
                 <input type="submit" value="Join">
-
             </form>
         </div>
+
 
     </div>
 
